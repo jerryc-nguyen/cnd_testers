@@ -4,14 +4,12 @@
   "description": "Playwright automation tests for chuannhadat.com form submission flow",
   "main": "index.js",
   "scripts": {
-    "test": "playwright test",
-    "test:headed": "playwright test --headed",
-    "test:ui": "playwright test --ui",
+    "test": "cucumber-js",
     "test:smoke": "playwright test tests/example.spec.js",
-    "test:form": "playwright test tests/form-submission.spec.js",
-    "test:debug": "playwright test --debug",
-    "test:live": "playwright test --config=playwright.config.js",
-    "test:report": "playwright show-report",
+    "test:cucumber": "cucumber-js",
+    "test:cucumber:headed": "HEADLESS=false cucumber-js",
+    "test:cucumber:tags": "cucumber-js --tags",
+    "test:report": "cucumber-js --format html:cucumber-reports/report.html",
     "install:browsers": "playwright install"
   },
   "keywords": [
@@ -25,5 +23,12 @@
   "license": "ISC",
   "dependencies": {
     "@playwright/test": "^1.54.2"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.1.0",
+    "@cucumber/html-formatter": "^21.13.0",
+    "@cucumber/pretty-formatter": "^2.0.1",
+    "cucumber-playwright": "^1.2.1",
+    "multiple-cucumber-html-reporter": "^3.9.3"
   }
 }
