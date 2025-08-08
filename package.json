@@ -1,0 +1,29 @@
+{
+  "name": "chuannhadat-automation-tests",
+  "version": "1.0.0",
+  "description": "Playwright automation tests for chuannhadat.com form submission flow",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:smoke": "playwright test tests/example.spec.js",
+    "test:form": "playwright test tests/form-submission.spec.js",
+    "test:debug": "playwright test --debug",
+    "test:live": "playwright test --config=playwright.config.js",
+    "test:report": "playwright show-report",
+    "install:browsers": "playwright install"
+  },
+  "keywords": [
+    "playwright",
+    "automation",
+    "testing",
+    "e2e",
+    "chuannhadat"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@playwright/test": "^1.54.2"
+  }
+}
