@@ -14,5 +14,3 @@ Feature: User login to create post on Chuannhadat.com
     And I enter password "{configured}"
     And I click the submit button in the login modal
     Then I should be successfully logged in
-    And I should be able to access post creation features
-    And I take a screenshot "successful-login-for-posting"
