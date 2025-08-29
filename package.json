@@ -24,8 +24,16 @@
     "test:staging:login": "TEST_ENV=staging cucumber-js features/login.feature --require step-definitions --require support",
     
     "test:all-envs": "npm run test:local:login && npm run test:live:login",
-    "test:login-only": "cucumber-js --tags @login",
-    "test:happy-path": "cucumber-js --tags @happy-path"
+    "test:login-only": "cucumber-js --tags @login --require step-definitions --require support",
+    "test:happy-path": "cucumber-js --tags @happy-path --require step-definitions --require support",
+    
+    "test:create-post:local": "TEST_ENV=local cucumber-js features/create-post-desktop.feature --require step-definitions --require support",
+    "test:create-post:live": "TEST_ENV=live cucumber-js features/create-post-desktop.feature --require step-definitions --require support",
+    "test:create-post-only": "cucumber-js --tags @create-post --require step-definitions --require support",
+    "test:desktop-only": "cucumber-js --tags @desktop --require step-definitions --require support",
+    
+    "test:login-then-create-post:local": "TEST_ENV=local cucumber-js features/login.feature features/create-post-desktop.feature --require step-definitions --require support",
+    "test:login-then-create-post:live": "TEST_ENV=live cucumber-js features/login.feature features/create-post-desktop.feature --require step-definitions --require support"
   },
   "keywords": [
     "playwright",

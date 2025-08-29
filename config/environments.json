@@ -1,12 +1,12 @@
 {
   "local": {
     "name": "Local Development",
-    "baseURL": "http://localhost:3001",
+    "baseURL": "http://localhost:3000",
     "browser": "chromium",
     "headless": false,
     "credentials": {
-      "username": "testuser@example.com",
-      "password": "validpassword123"
+      "username": "admin@gmail.com",
+      "password": "123123123"
     },
     "timeouts": {
       "default": 15000,
