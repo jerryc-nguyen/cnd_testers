@@ -11,17 +11,17 @@ Feature: Create post on Chuannhadat.com - Desktop Version
   Scenario: Successfully create a new Sell Apartment post
     When I fill in Nhu cầu field with "Cho thuê"
     And I select Loại bất động sản type "Căn hộ chung cư"
-    And I enter the Giá bán "5000000000"
+    And I enter the Giá bán "4500000000"
     And I enter the Diện tích (m²) "85"
     And I enter the Số phòng ngủ "3"
     And I enter the Số phòng tắm "3"
-    And I enter the Dự án "Vinhomes Central Park"
-    And I enter the Tiêu đề "Căn hộ 2PN view sông tại Vinhomes Central Park"
+    And I enter the Dự án "Melody Residences"
+    And I enter the Tiêu đề "Căn hộ 2PN - Melody Residences"
     And I enter the Nội dung mô tả "Căn hộ đẹp, view sông, nội thất cao cấp, vị trí thuận tiện"
-    And I select Giấy tờ pháp lý "Sổ hồng"
-    And I select Vị trí tầng "Tầng cao"
-    And I select Hướng ban công "Đông Nam"
-    And I select Nội thất "Đầy đủ nội thất"
+    And I select Giấy tờ pháp lý "Hợp đồng mua bán"
+    And I select Vị trí tầng "4"
+    And I select Hướng ban công "Hướng Đông Nam"
+    And I select Nội thất "Hoàn thiện cơ bản"
     And I upload property images from local machine
     And I click the Submit button
     Then the post should be created successfully
