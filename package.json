@@ -10,7 +10,22 @@
     "test:cucumber:headed": "HEADLESS=false cucumber-js",
     "test:cucumber:tags": "cucumber-js --tags",
     "test:report": "cucumber-js --format html:cucumber-reports/report.html",
-    "install:browsers": "playwright install"
+    "install:browsers": "playwright install",
+    
+    "test:local": "TEST_ENV=local cucumber-js --require step-definitions --require support",
+    "test:local:headed": "TEST_ENV=local cucumber-js features/login.feature --require step-definitions --require support",
+    "test:local:login": "TEST_ENV=local cucumber-js features/login.feature --require step-definitions --require support",
+    
+    "test:live": "TEST_ENV=live cucumber-js --require step-definitions --require support",
+    "test:live:login": "TEST_ENV=live cucumber-js features/login.feature --require step-definitions --require support",
+    "test:live:headless": "TEST_ENV=live cucumber-js features/login.feature --require step-definitions --require support",
+    
+    "test:staging": "TEST_ENV=staging cucumber-js --require step-definitions --require support",
+    "test:staging:login": "TEST_ENV=staging cucumber-js features/login.feature --require step-definitions --require support",
+    
+    "test:all-envs": "npm run test:local:login && npm run test:live:login",
+    "test:login-only": "cucumber-js --tags @login",
+    "test:happy-path": "cucumber-js --tags @happy-path"
   },
   "keywords": [
     "playwright",
@@ -21,6 +36,10 @@
   ],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=24.7.0",
+    "npm": ">=10.0.0"
+  },
   "dependencies": {
     "@playwright/test": "^1.54.2"
   },

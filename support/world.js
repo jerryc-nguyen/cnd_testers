@@ -8,6 +8,7 @@ const {
 const { chromium, firefox, webkit, devices } = require('playwright');
 const fs = require('fs');
 const path = require('path');
+const config = require('../config/config-loader');
 
 // Browser and context management
 let browser = null;
@@ -17,20 +18,30 @@ class CustomWorld {
   constructor({ parameters }) {
     this.parameters = parameters;
     this.page = null;
-    this.baseURL = parameters.baseURL || 'https://chuannhadat.com';
-    this.headless = parameters.headless !== false;
+
+    // Load configuration
+    this.config = config.getConfig();
+    this.baseURL = this.config.baseURL;
+    this.headless = this.config.headless;
+    this.timeouts = this.config.timeouts;
+    this.credentials = this.config.credentials;
+    this.debugSettings = this.config.debug;
 
     // Test data storage
     this.testData = {};
     this.screenshots = [];
+
+    console.log(
+      `🌍 World initialized for ${this.config.name} environment`
+    );
   }
 
   async init() {
     // Create new page for this scenario
     this.page = await context.newPage();
 
-    // Set default timeout
-    this.page.setDefaultTimeout(30000);
+    // Set default timeout from configuration
+    this.page.setDefaultTimeout(this.timeouts.default);
 
     // Handle console logs
     this.page.on('console', (msg) => {
@@ -93,13 +104,13 @@ setWorldConstructor(CustomWorld);
 BeforeAll(async function () {
   console.log('🚀 Starting Cucumber tests with Playwright');
 
-  // Choose browser based on environment
-  const browserType = process.env.BROWSER || 'chromium';
-  const headless = process.env.HEADLESS !== 'false';
+  // Print current configuration
+  config.printConfig();
 
-  console.log(
-    `Using browser: ${browserType} (headless: ${headless})`
-  );
+  // Get browser configuration
+  const browserConfig = config.getBrowserConfig();
+  const browserType = browserConfig.browser;
+  const headless = browserConfig.headless;
 
   // Launch browser
   switch (browserType) {
@@ -113,15 +124,21 @@ BeforeAll(async function () {
       browser = await chromium.launch({ headless });
   }
 
-  // Create context with options
+  // Create context with options from configuration
+  const debugSettings = config.getDebugSettings();
   const contextOptions = {
     viewport: { width: 1280, height: 720 },
     permissions: ['geolocation'],
-    recordVideo: process.env.RECORD_VIDEO
+    recordVideo: debugSettings.recordVideo
       ? { dir: 'test-results/videos' }
       : undefined,
-    trace: process.env.TRACE ? 'on' : 'off',
+    trace: debugSettings.trace ? 'on' : 'off',
   };
+
+  // Add slow motion if configured
+  if (debugSettings.slowMo > 0) {
+    contextOptions.slowMo = debugSettings.slowMo;
+  }
 
   // Add mobile device if specified
   if (process.env.DEVICE) {

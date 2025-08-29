@@ -3,10 +3,7 @@ const config = {
   paths: ['features/**/*.feature'],
 
   // Step definitions location
-  import: ['step-definitions/**/*.js'],
-
-  // Support files
-  requireModule: ['support/**/*.js'],
+  require: ['step-definitions/**/*.js', 'support/**/*.js'],
 
   // Output format
   format: [

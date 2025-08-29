@@ -1,0 +1,72 @@
+{
+  "local": {
+    "name": "Local Development",
+    "baseURL": "http://localhost:3001",
+    "browser": "chromium",
+    "headless": false,
+    "credentials": {
+      "username": "testuser@example.com",
+      "password": "validpassword123"
+    },
+    "timeouts": {
+      "default": 15000,
+      "login": 5000,
+      "modal": 3000,
+      "navigation": 10000
+    },
+    "debug": {
+      "recordVideo": false,
+      "trace": false,
+      "takeScreenshots": true,
+      "slowMo": 100
+    },
+    "server": {
+      "host": "localhost",
+      "port": 3000
+    }
+  },
+  "live": {
+    "name": "Live/Production",
+    "baseURL": "https://chuannhadat.com",
+    "browser": "chromium",
+    "headless": true,
+    "credentials": {
+      "username": "your-live-test-user@example.com",
+      "password": "your-live-test-password"
+    },
+    "timeouts": {
+      "default": 45000,
+      "login": 15000,
+      "modal": 10000,
+      "navigation": 30000
+    },
+    "debug": {
+      "recordVideo": true,
+      "trace": true,
+      "takeScreenshots": true,
+      "slowMo": 0
+    }
+  },
+  "staging": {
+    "name": "Staging Environment",
+    "baseURL": "https://staging.chuannhadat.com",
+    "browser": "chromium",
+    "headless": true,
+    "credentials": {
+      "username": "staging-test-user@example.com",
+      "password": "staging-test-password"
+    },
+    "timeouts": {
+      "default": 30000,
+      "login": 10000,
+      "modal": 8000,
+      "navigation": 20000
+    },
+    "debug": {
+      "recordVideo": false,
+      "trace": true,
+      "takeScreenshots": true,
+      "slowMo": 0
+    }
+  }
+}
