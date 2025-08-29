@@ -10,73 +10,23 @@ const {
   selectVietnameseDropdown,
 } = require('../input-helpers/desktop-components');
 
+// Import auth helper functions
+const {
+  setAuthenticationCookie,
+  verifyAuthentication,
+} = require('../input-helpers/auths');
+
 // Background steps
 Given(
   'I am logged in to chuannhadat.com',
   { timeout: 50000 },
   async function () {
-    // First, navigate to the home page
-    await this.goto('/');
-    await this.page.waitForLoadState('networkidle');
-    console.log('📍 Navigated to home page');
-
-    // Set the token_client cookie from environment configuration
-    const cookieConfig = this.config.cookies;
-
-    if (cookieConfig && cookieConfig.token_client) {
-      const cookieToSet = {
-        name: 'token-client',
-        value: cookieConfig.token_client,
-        domain: new URL(this.baseURL).hostname,
-        path: '/',
-        httpOnly: false,
-        secure: this.baseURL.startsWith('https'),
-        sameSite: 'Lax',
-      };
-
-      // console.log('🍪 Setting cookie:', {
-      //   name: cookieToSet.name,
-      //   value: cookieToSet.value.substring(0, 20) + '...',
-      //   domain: cookieToSet.domain,
-      //   path: cookieToSet.path,
-      //   secure: cookieToSet.secure,
-      // });
-
-      await this.page.context().addCookies([cookieToSet]);
-
-      console.log('✅ Cookie set successfully');
-
-      // Verify the cookie was set
-      const cookies = await this.page.context().cookies();
-      const frontendTokenCookie = cookies.find(
-        (c) => c.name === 'token_client'
-      );
-
-      if (frontendTokenCookie) {
-        console.log(
-          '🔍 Cookie verification: token_client found with value:',
-          frontendTokenCookie.value.substring(0, 20) + '...'
-        );
-      } else {
-        console.log(
-          '❌ Cookie verification: token_client NOT found in cookies'
-        );
-        console.log(
-          'Available cookies:',
-          cookies.map((c) => c.name)
-        );
-      }
-
-      // Reload the page to apply the authentication cookie
-      await this.page.reload();
-      await this.page.waitForLoadState('networkidle');
-
-      console.log('✅ Page reloaded with authentication cookie');
-    } else {
-      throw new Error(
-        'token_client not found in environment configuration'
-      );
-    }
+    // Use the auth helper to set authentication cookie
+    await setAuthenticationCookie(
+      this.page,
+      this.config,
+      this.baseURL
+    );
   }
 );
 
