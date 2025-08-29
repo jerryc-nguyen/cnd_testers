@@ -3,7 +3,84 @@ const { expect } = require('@playwright/test');
 const config = require('../config/config-loader');
 const path = require('path');
 
-// Navigation step for post creation (assumes user is already logged in from previous feature)
+// Import helper functions from desktop components module
+const {
+  fillTextInput,
+  selectDropdownOption,
+  selectVietnameseDropdown,
+} = require('../input-helpers/desktop-components');
+
+// Background steps
+Given(
+  'I am logged in to chuannhadat.com',
+  { timeout: 50000 },
+  async function () {
+    // First, navigate to the home page
+    await this.goto('/');
+    await this.page.waitForLoadState('networkidle');
+    console.log('📍 Navigated to home page');
+
+    // Set the token_client cookie from environment configuration
+    const cookieConfig = this.config.cookies;
+
+    if (cookieConfig && cookieConfig.token_client) {
+      const cookieToSet = {
+        name: 'token-client',
+        value: cookieConfig.token_client,
+        domain: new URL(this.baseURL).hostname,
+        path: '/',
+        httpOnly: false,
+        secure: this.baseURL.startsWith('https'),
+        sameSite: 'Lax',
+      };
+
+      // console.log('🍪 Setting cookie:', {
+      //   name: cookieToSet.name,
+      //   value: cookieToSet.value.substring(0, 20) + '...',
+      //   domain: cookieToSet.domain,
+      //   path: cookieToSet.path,
+      //   secure: cookieToSet.secure,
+      // });
+
+      await this.page.context().addCookies([cookieToSet]);
+
+      console.log('✅ Cookie set successfully');
+
+      // Verify the cookie was set
+      const cookies = await this.page.context().cookies();
+      const frontendTokenCookie = cookies.find(
+        (c) => c.name === 'token_client'
+      );
+
+      if (frontendTokenCookie) {
+        console.log(
+          '🔍 Cookie verification: token_client found with value:',
+          frontendTokenCookie.value.substring(0, 20) + '...'
+        );
+      } else {
+        console.log(
+          '❌ Cookie verification: token_client NOT found in cookies'
+        );
+        console.log(
+          'Available cookies:',
+          cookies.map((c) => c.name)
+        );
+      }
+
+      // Reload the page to apply the authentication cookie
+      await this.page.reload();
+      await this.page.waitForLoadState('networkidle');
+
+      console.log('✅ Page reloaded with authentication cookie');
+    } else {
+      throw new Error(
+        'token_client not found in environment configuration'
+      );
+    }
+  }
+);
+
+// Navigation step for post creation
 
 Given('I navigate to the new post creation page', async function () {
   await this.goto('/dashboard/manage-post/new-post');
@@ -24,36 +101,150 @@ Given('I navigate to the new post creation page', async function () {
 When(
   'I fill in Nhu cầu field with {string}',
   async function (requirement) {
-    console.log(`TODO: Fill in Nhu cầu field with: ${requirement}`);
+    // Vietnamese to value mapping for Nhu cầu field
+    const valueMap = {
+      Bán: 'sell',
+      'Cho thuê': 'rent',
+    };
+
+    // The Nhu cầu field typically shows "Bán" as default, but we want to change it
+    const currentValue = requirement === 'Bán' ? 'Bán' : 'Bán'; // Always look for "Bán" first
+
+    const success = await selectVietnameseDropdown(
+      this.page,
+      'Nhu cầu',
+      requirement,
+      valueMap,
+      currentValue
+    );
+
+    if (!success) {
+      await this.takeScreenshot('nhu-cau-select-failed');
+      throw new Error(
+        `Could not select Nhu cầu value: ${requirement}. Helper function failed.`
+      );
+    }
   }
 );
 
 When(
   'I select Loại bất động sản type {string}',
   async function (propertyType) {
-    console.log(
-      `TODO: Select Loại bất động sản type: ${propertyType}`
+    // Vietnamese to value mapping for property types (based on actual DOM)
+    const valueMap = {
+      'Căn hộ chung cư': 'can_ho_chung_cu',
+      'Nhà riêng': 'nha_rieng',
+      'Nhà mặt phố': 'nha_mat_pho',
+      Đất: 'dat',
+      'Biệt thự liền kề': 'biet_thu_lien_ke',
+      'Đất nền dự án': 'dat_nen_du_an',
+      'Trang trại/ Khu nghỉ dưỡng': 'trang_trai_khu_nghi_duong',
+      'Kho/ Nhà xưởng': 'kho_nha_xuong',
+      'Nhà trọ/ Phòng trọ': 'nha_tro_phong_tro',
+      'Văn phòng': 'van_phong',
+      'Cửa hàng/ Ki-ốt': 'cua_hang_kiot',
+      'Bất động sản khác': 'bat_dong_san_khac',
+    };
+
+    // The field currently shows "Căn hộ chung cư" as default
+    const currentValue = 'Căn hộ chung cư';
+
+    const success = await selectVietnameseDropdown(
+      this.page,
+      'Loại bất động sản',
+      propertyType,
+      valueMap,
+      currentValue
     );
+
+    if (!success) {
+      console.log(
+        `TODO: Implement selector for Loại bất động sản type: ${propertyType}`
+      );
+    }
   }
 );
 
 When('I enter the Giá bán {string}', async function (price) {
-  console.log(`TODO: Enter Giá bán: ${price}`);
+  const selectors = [
+    'input[name="price_in_vnd"]',
+    'input[placeholder="Nhập giá bán"]',
+  ];
+
+  const success = await fillTextInput(
+    this.page,
+    'Giá bán',
+    price,
+    selectors
+  );
+
+  if (!success) {
+    await this.takeScreenshot('price-input-failed');
+    throw new Error(`Could not enter price: ${price}`);
+  }
 });
 
 When(
   'I enter the Diện tích \\(m²\\) {string}',
   async function (area) {
-    console.log(`TODO: Enter Diện tích (m²): ${area}`);
+    const selectors = [
+      'input[name="area"]',
+      'input[placeholder*="Nhập diện tích"]',
+    ];
+
+    const success = await fillTextInput(
+      this.page,
+      'Diện tích (m²)',
+      area,
+      selectors
+    );
+
+    if (!success) {
+      console.log(
+        `TODO: Implement selector for Diện tích (m²): ${area}`
+      );
+    }
   }
 );
 
 When('I enter the Số phòng ngủ {string}', async function (bedrooms) {
-  console.log(`TODO: Enter Số phòng ngủ: ${bedrooms}`);
+  const selectors = [
+    'input[name="bedrooms_count"]',
+    'input[placeholder="Nhập số khác"]',
+  ];
+
+  const success = await fillTextInput(
+    this.page,
+    'Số phòng ngủ',
+    bedrooms,
+    selectors
+  );
+
+  if (!success) {
+    console.log(
+      `TODO: Implement selector for Số phòng ngủ: ${bedrooms}`
+    );
+  }
 });
 
 When('I enter the Số phòng tắm {string}', async function (bathrooms) {
-  console.log(`TODO: Enter Số phòng tắm: ${bathrooms}`);
+  const selectors = [
+    'input[name="bathrooms_count"]',
+    'input[placeholder="Nhập số khác"]',
+  ];
+
+  const success = await fillTextInput(
+    this.page,
+    'Số phòng tắm',
+    bathrooms,
+    selectors
+  );
+
+  if (!success) {
+    console.log(
+      `TODO: Implement selector for Số phòng tắm: ${bathrooms}`
+    );
+  }
 });
 
 When('I enter the Dự án {string}', async function (project) {
@@ -72,7 +263,26 @@ When(
 );
 
 When('I select Giấy tờ pháp lý {string}', async function (legalDocs) {
-  console.log(`TODO: Select Giấy tờ pháp lý: ${legalDocs}`);
+  // Vietnamese to value mapping for legal documents
+  const valueMap = {
+    'Sổ hồng': 'red_book',
+    'Sổ đỏ': 'red_book',
+    'Giấy tờ hợp lệ': 'valid_documents',
+    'Đang chờ sổ': 'pending_documents',
+  };
+
+  const success = await selectVietnameseDropdown(
+    this.page,
+    'Giấy tờ pháp lý',
+    legalDocs,
+    valueMap
+  );
+
+  if (!success) {
+    console.log(
+      `TODO: Implement selector for Giấy tờ pháp lý: ${legalDocs}`
+    );
+  }
 });
 
 When('I select Vị trí tầng {string}', async function (floorPosition) {
@@ -117,4 +327,18 @@ When('I click the Submit button', async function () {
 // Success verification steps
 Then('the post should be created successfully', async function () {
   console.log('TODO: Verify post creation success');
+});
+
+Then(
+  'I should see a success confirmation message',
+  async function () {
+    console.log(
+      'TODO: Verify success confirmation message is displayed'
+    );
+  }
+);
+
+// Screenshot step
+Then('I take a screenshot {string}', async function (screenshotName) {
+  await this.takeScreenshot(screenshotName);
 });

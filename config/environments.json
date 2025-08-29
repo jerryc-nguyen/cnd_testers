@@ -8,6 +8,9 @@
       "username": "admin@gmail.com",
       "password": "123123123"
     },
+    "cookies": {
+      "token_client": "PRtyTgjyed6qyMA17ync"
+    },
     "timeouts": {
       "default": 15000,
       "login": 5000,
@@ -33,6 +36,9 @@
     "credentials": {
       "username": "your-live-test-user@example.com",
       "password": "your-live-test-password"
+    },
+    "cookies": {
+      "token_client": "c920f4eb-5cb0-4e71-9027-a7582dac407c"
     },
     "timeouts": {
       "default": 45000,

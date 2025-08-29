@@ -26,6 +26,7 @@ class CustomWorld {
     this.timeouts = this.config.timeouts;
     this.credentials = this.config.credentials;
     this.debugSettings = this.config.debug;
+    this.cookies = this.config.cookies;
 
     // Test data storage
     this.testData = {};
