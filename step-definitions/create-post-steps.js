@@ -543,6 +543,133 @@ Then(
   }
 );
 
+// Additional steps for "Nhà riêng" (Private House) scenario
+When(
+  'I enter Mặt tiền rộng \\(m\\) {string}',
+  async function (frontWidth) {
+    const selectors = [
+      'input[name="front_width"]',
+      'input[placeholder*="Nhập mặt tiền"]',
+      'input[placeholder*="mặt tiền"]',
+    ];
+
+    const success = await fillTextInput(
+      this.page,
+      'Mặt tiền rộng (m)',
+      frontWidth,
+      selectors
+    );
+
+    if (!success) {
+      console.log(
+        `TODO: Implement selector for Mặt tiền rộng (m): ${frontWidth}`
+      );
+    }
+  }
+);
+
+When('I enter Đường rộng {string}', async function (roadWidth) {
+  const selectors = [
+    'input[name="road_width"]',
+    'input[placeholder*="Nhập đường rộng"]',
+    'input[placeholder*="đường rộng"]',
+  ];
+
+  const success = await fillTextInput(
+    this.page,
+    'Đường rộng',
+    roadWidth,
+    selectors
+  );
+
+  if (!success) {
+    console.log(
+      `TODO: Implement selector for Đường rộng: ${roadWidth}`
+    );
+  }
+});
+
+When('I enter Số tầng {string}', async function (floors) {
+  const selectors = [
+    'input[name="floors_count"]',
+    'input[name="floors"]',
+    'input[placeholder*="Nhập số tầng"]',
+    'input[placeholder*="tầng"]',
+  ];
+
+  const success = await fillTextInput(
+    this.page,
+    'Số tầng',
+    floors,
+    selectors
+  );
+
+  if (!success) {
+    console.log(`TODO: Implement selector for Số tầng: ${floors}`);
+  }
+});
+
+When(
+  'I select Hướng nhà\\/ đất {string}',
+  async function (houseDirection) {
+    // Vietnamese to value mapping for house/land directions (similar to balcony directions)
+    const valueMap = {
+      'Hướng Tây': 'west',
+      Tây: 'west',
+      'Hướng Tây Nam': 'west_south',
+      'Tây Nam': 'west_south',
+      'Hướng Tây Bắc': 'west_north',
+      'Tây Bắc': 'west_north',
+      'Hướng Đông': 'east',
+      Đông: 'east',
+      'Hướng Đông Nam': 'east_south',
+      'Đông Nam': 'east_south',
+      'Hướng Đông Bắc': 'east_north',
+      'Đông Bắc': 'east_north',
+      'Hướng Nam': 'south',
+      Nam: 'south',
+      'Hướng Bắc': 'north',
+      Bắc: 'north',
+    };
+
+    // Define option matchers for house/land direction select
+    const optionMatchers = [
+      'Hướng',
+      'east',
+      'west',
+      'south',
+      'north',
+      'nhà',
+      'đất',
+    ];
+
+    // Try the reusable hidden select helper first
+    const success = await selectHiddenDropdown(
+      this.page,
+      'Hướng nhà/ đất',
+      houseDirection,
+      valueMap,
+      optionMatchers
+    );
+
+    if (!success) {
+      // Fallback to general helper function
+      const fallbackSuccess = await selectVietnameseDropdown(
+        this.page,
+        'Hướng nhà/ đất',
+        houseDirection,
+        valueMap
+      );
+
+      if (!fallbackSuccess) {
+        console.log(
+          `TODO: Implement selector for Hướng nhà/ đất: ${houseDirection}`
+        );
+      }
+    }
+  }
+);
+
 // Screenshot step
 Then('I take a screenshot {string}', async function (screenshotName) {
   await this.takeScreenshot(screenshotName);
