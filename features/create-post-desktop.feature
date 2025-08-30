@@ -62,8 +62,8 @@ Feature: Create post on Chuannhadat.com - Desktop Version
     And I enter by CMDK autocomplete label "Phường/ Xã", input: "Phường Hòa Khánh Nam"
     And I enter by CMDK autocomplete label "Đường/ Phố", input: "Nguyễn Tất Thành"
 
-    And I enter the Tiêu đề "Bán nhà riêng - Quận Tân Phú"
-    And I enter the Nội dung mô tả "Căn hộ đẹp, view sông, nội thất cao cấp, vị trí thuận tiện"
+    And I enter the Tiêu đề "Chính chủ bán nhà HXH Trần Quang Diệu, Phường 14, Quận 3 Giá 18,5 tỷ TL. Sổ sẵn"
+    And I enter the Nội dung mô tả "- Vị trí: Nhà hẻm xe hơi đường Trần Quang Diệu, Phường 14, Quận 3, TP. HCM.- Khu vực trung tâm, giao thông thuận tiện, gần chợ, trường học, bệnh viện, siêu thị và các tuyến đường lớn như Lê Văn Sỹ, Trường Sa, Cách Mạng Tháng 8."
     And I select Giấy tờ pháp lý "Giấy viết tay"
     And I enter Mặt tiền rộng (m) "5"
     And I enter Đường rộng "8"
@@ -90,8 +90,8 @@ Feature: Create post on Chuannhadat.com - Desktop Version
     And I enter by CMDK autocomplete label "Phường/ Xã", input: "Phường Hòa Khánh Nam"
     And I enter by CMDK autocomplete label "Đường/ Phố", input: "Nguyễn Tất Thành"
 
-    And I enter the Tiêu đề "Bán nhà riêng - Quận Tân Phú"
-    And I enter the Nội dung mô tả "Căn hộ đẹp, view sông, nội thất cao cấp, vị trí thuận tiện"
+    And I enter the Tiêu đề "Chính chủ cho thuê nhà HXH Trần Quang Diệu, Phường 14, Quận 3 Giá 18,5 tỷ TL. Sổ sẵn"
+    And I enter the Nội dung mô tả "- Vị trí: Nhà hẻm xe hơi đường Trần Quang Diệu, Phường 14, Quận 3, TP. HCM.- Khu vực trung tâm, giao thông thuận tiện, gần chợ, trường học, bệnh viện, siêu thị và các tuyến đường lớn như Lê Văn Sỹ, Trường Sa, Cách Mạng Tháng 8."
     And I select Giấy tờ pháp lý "Giấy viết tay"
     And I enter Mặt tiền rộng (m) "5"
     And I enter Đường rộng "8"
