@@ -548,11 +548,7 @@ Then(
 When(
   'I enter Mặt tiền rộng \\(m\\) {string}',
   async function (frontWidth) {
-    const selectors = [
-      'input[name="front_width"]',
-      'input[placeholder*="Nhập mặt tiền"]',
-      'input[placeholder*="mặt tiền"]',
-    ];
+    const selectors = ['input[name="facade"]'];
 
     const success = await fillTextInput(
       this.page,
@@ -562,19 +558,16 @@ When(
     );
 
     if (!success) {
-      console.log(
-        `TODO: Implement selector for Mặt tiền rộng (m): ${frontWidth}`
+      await this.takeScreenshot('mat-tien-rong-failed');
+      throw new Error(
+        `Could not enter Mặt tiền rộng (m): ${frontWidth}`
       );
     }
   }
 );
 
 When('I enter Đường rộng {string}', async function (roadWidth) {
-  const selectors = [
-    'input[name="road_width"]',
-    'input[placeholder*="Nhập đường rộng"]',
-    'input[placeholder*="đường rộng"]',
-  ];
+  const selectors = ['input[name="entrance"]'];
 
   const success = await fillTextInput(
     this.page,
@@ -584,19 +577,13 @@ When('I enter Đường rộng {string}', async function (roadWidth) {
   );
 
   if (!success) {
-    console.log(
-      `TODO: Implement selector for Đường rộng: ${roadWidth}`
-    );
+    await this.takeScreenshot('duong-rong-failed');
+    throw new Error(`Could not enter Đường rộng: ${roadWidth}`);
   }
 });
 
 When('I enter Số tầng {string}', async function (floors) {
-  const selectors = [
-    'input[name="floors_count"]',
-    'input[name="floors"]',
-    'input[placeholder*="Nhập số tầng"]',
-    'input[placeholder*="tầng"]',
-  ];
+  const selectors = ['input[name="floors_count"]'];
 
   const success = await fillTextInput(
     this.page,
@@ -606,7 +593,8 @@ When('I enter Số tầng {string}', async function (floors) {
   );
 
   if (!success) {
-    console.log(`TODO: Implement selector for Số tầng: ${floors}`);
+    await this.takeScreenshot('so-tang-failed');
+    throw new Error(`Could not enter Số tầng: ${floors}`);
   }
 });
 
