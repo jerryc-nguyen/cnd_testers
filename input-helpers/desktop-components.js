@@ -493,6 +493,135 @@ async function selectHiddenDropdown(
   }
 }
 
+// Helper function for location CMDK autocomplete with specific aria-label mapping
+async function selectLocationCmdkAutocomplete(
+  page,
+  labelText,
+  inputValue,
+  takeScreenshot
+) {
+  console.log(`🌍 Selecting location: ${labelText} -> ${inputValue}`);
+
+  // Map label text to aria-label patterns
+  const ariaLabelMap = {
+    'Tỉnh/ Thành phố': 'Chọn Thành Phố',
+    'Quận/ Huyện': 'Chọn Quận',
+    'Phường/ Xã': 'Chọn Phường',
+    'Đường/ Phố': 'Chọn Đường/ Phố',
+  };
+
+  // Get the appropriate aria-label or use a generic pattern
+  const ariaLabel =
+    ariaLabelMap[labelText] || `Chọn ${labelText.split('/')[0]}`;
+
+  // Multiple selector strategies for the button
+  const buttonSelectors = [
+    `button[aria-label="${ariaLabel}"]`,
+    `button[aria-label*="${ariaLabel}"]`,
+    `button[aria-label*="Chọn ${labelText.split('/')[0]}"]`,
+    `button[role="combobox"][aria-label*="Chọn"]`,
+    `button:has-text("${inputValue}")`, // If the value is already selected
+    `label:has-text("${labelText}") + * button[role="combobox"]`, // Button after label
+  ];
+
+  let success = false;
+
+  // Try each button selector
+  for (const buttonSelector of buttonSelectors) {
+    console.log(`🔍 Trying button selector: ${buttonSelector}`);
+
+    const options = {
+      buttonSelector: buttonSelector,
+      inputSelector:
+        'input[cmdk-input][role="combobox"]:not([name]), input[cmdk-input=""]:not([placeholder])',
+      optionSelector: '[cmdk-item], [role="option"]',
+      timeout: 3000,
+      searchTimeout: 1500,
+    };
+
+    success = await buttonCmdkDropdownInput(
+      page,
+      labelText,
+      inputValue,
+      options
+    );
+
+    if (success) {
+      console.log(
+        `✅ Successfully selected ${labelText}: ${inputValue}`
+      );
+      break;
+    }
+  }
+
+  if (!success) {
+    // Final fallback: try to find any combobox button near the label
+    console.log(`🔄 Final fallback approach for ${labelText}`);
+
+    try {
+      // Look for the label and then find a nearby combobox button
+      const labelElement = await page
+        .locator(`text="${labelText}"`)
+        .first();
+      if (await labelElement.isVisible({ timeout: 2000 })) {
+        // Find the parent container and look for a combobox button within it
+        const container = labelElement.locator(
+          'xpath=ancestor::div[1]'
+        );
+        const comboboxButton = container
+          .locator('button[role="combobox"]')
+          .first();
+
+        if (await comboboxButton.isVisible({ timeout: 2000 })) {
+          console.log(
+            `🎯 Found combobox button near label: ${labelText}`
+          );
+
+          // Click the button directly
+          await comboboxButton.click();
+          await page.waitForTimeout(500);
+
+          // Type in the search input
+          const searchInput = await page
+            .locator(
+              'input[cmdk-input][role="combobox"]:not([name]):visible, input[cmdk-input=""]:not([placeholder]):visible'
+            )
+            .first();
+          if (await searchInput.isVisible({ timeout: 2000 })) {
+            await searchInput.fill(inputValue);
+            await page.waitForTimeout(1000);
+
+            // Click the first matching option
+            const option = await page
+              .locator('[cmdk-item], [role="option"]')
+              .first();
+            if (await option.isVisible({ timeout: 2000 })) {
+              await option.click();
+              success = true;
+              console.log(
+                `✅ Fallback successful for ${labelText}: ${inputValue}`
+              );
+            }
+          }
+        }
+      }
+    } catch (fallbackError) {
+      console.log(`❌ Fallback failed: ${fallbackError.message}`);
+    }
+  }
+
+  if (!success) {
+    const screenshotName = `location-${labelText.replace(
+      /[^a-zA-Z0-9]/g,
+      '-'
+    )}-failed`;
+    await takeScreenshot(screenshotName);
+    throw new Error(`Could not select ${labelText}: ${inputValue}`);
+  }
+
+  return success;
+}
+
 // Export all helper functions
 module.exports = {
   fillTextInput,
@@ -502,4 +631,5 @@ module.exports = {
   uploadFiles,
   findHiddenSelectByOptions,
   selectHiddenDropdown,
+  selectLocationCmdkAutocomplete,
 };

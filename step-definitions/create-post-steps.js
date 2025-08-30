@@ -12,6 +12,7 @@ const {
   uploadFiles,
   findHiddenSelectByOptions,
   selectHiddenDropdown,
+  selectLocationCmdkAutocomplete,
 } = require('../input-helpers/desktop-components');
 
 // Import auth helper functions
@@ -667,6 +668,19 @@ When(
         );
       }
     }
+  }
+);
+
+// Generic location CMDK step that handles all location types
+When(
+  'I enter by CMDK autocomplete label {string}, input: {string}',
+  async function (labelText, inputValue) {
+    await selectLocationCmdkAutocomplete(
+      this.page,
+      labelText,
+      inputValue,
+      this.takeScreenshot.bind(this)
+    );
   }
 );
 

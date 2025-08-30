@@ -57,7 +57,11 @@ Feature: Create post on Chuannhadat.com - Desktop Version
     And I enter the Diện tích (m²) "100"
     And I enter the Số phòng ngủ "3"
     And I enter the Số phòng tắm "3"
-    And I enter the Dự án "Melody Residences"
+    And I enter by CMDK autocomplete label "Tỉnh/ Thành phố", input: "Đà Nẵng"
+    And I enter by CMDK autocomplete label "Quận/ Huyện", input: "Quận Liên Chiểu"
+    And I enter by CMDK autocomplete label "Phường/ Xã", input: "Phường Hòa Khánh Nam"
+    And I enter by CMDK autocomplete label "Đường/ Phố", input: "Nguyễn Tất Thành"
+
     And I enter the Tiêu đề "Bán nhà riêng - Quận Tân Phú"
     And I enter the Nội dung mô tả "Căn hộ đẹp, view sông, nội thất cao cấp, vị trí thuận tiện"
     And I select Giấy tờ pháp lý "Giấy viết tay"
@@ -80,6 +84,12 @@ Feature: Create post on Chuannhadat.com - Desktop Version
     And I enter the Diện tích (m²) "100"
     And I enter the Số phòng ngủ "3"
     And I enter the Số phòng tắm "3"
+    
+    And I enter by CMDK autocomplete label "Tỉnh/ Thành phố", input: "Đà Nẵng"
+    And I enter by CMDK autocomplete label "Quận/ Huyện", input: "Quận Liên Chiểu"
+    And I enter by CMDK autocomplete label "Phường/ Xã", input: "Phường Hòa Khánh Nam"
+    And I enter by CMDK autocomplete label "Đường/ Phố", input: "Nguyễn Tất Thành"
+
     And I enter the Tiêu đề "Bán nhà riêng - Quận Tân Phú"
     And I enter the Nội dung mô tả "Căn hộ đẹp, view sông, nội thất cao cấp, vị trí thuận tiện"
     And I select Giấy tờ pháp lý "Giấy viết tay"
